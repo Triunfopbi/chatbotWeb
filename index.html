@@ -4,260 +4,125 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Assistente Triunfo</title>
-
 <link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
-
 <style>
 :root{
-  --bg-dark:#070A10;
-  --bg-panel:#0B1220;
-  --green:#22C55E;
-  --green-soft:rgba(34,197,94,.18);
-  --border:rgba(255,255,255,.08);
-  --text:#E8EEFC;
-  --muted:#9CA3AF;
+  --bg-dark:#070A10; --bg-panel:#0B1220; --green:#22C55E; 
+  --green-soft:rgba(34,197,94,.18); --border:rgba(255,255,255,.08); 
+  --text:#E8EEFC; --muted:#9CA3AF;
 }
-
 *{box-sizing:border-box;}
-html,body{height:100%; margin:0;}
+html,body{height:100%; margin:0; background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel)); color:var(--text); overflow: hidden;}
+body{ display:flex; justify-content:center; align-items:center; font-family: Segoe UI, sans-serif; }
 
-body{
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg-dark), var(--bg-panel));
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* CONTAINER RESPONSIVO */
 .chat-container{
-  width: 95%;
-  max-width: 1100px;
-  height: 90vh;
-  background: rgba(15,23,42,.75);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  width: 95%; max-width: 1100px; height: 90vh;
+  background:rgba(15,23,42,.75); border:1px solid var(--border);
+  border-radius:20px; display:flex; flex-direction:column; overflow:hidden;
+  backdrop-filter:blur(10px);
 }
 
-/* HEADER */
 .chat-header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,.3);
-  flex-shrink: 0;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,.3);
 }
 
-.chat-header-left{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.logo{ height:22px; }
 
-.logo{ height: 22px; }
-
-.header-text{ display: flex; flex-direction: column; }
-.header-title{ font-weight: 700; font-size: 15px; }
-.header-sub{ font-size: 11px; color: var(--muted); }
-
-.status{ display: flex; align-items: center; gap: 8px; font-size: 13px; }
-.status-dot{ width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
-
-button{
-  background: var(--green-soft);
-  border: 1px solid var(--green);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-button:hover{ background: rgba(34,197,94,.35); }
-button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* WEBCHAT AREA */
-#webchat {
+/* ÁREA DO CHAT - O segredo está aqui */
+#webchat-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
   overflow: hidden;
+  position: relative;
 }
 
-/* Garante que o conteúdo interno do WebChat preencha o espaço sem sumir com o input */
-#webchat > * {
-  height: 100% !important;
-  width: 100% !important;
+#webchat {
+  height: 100%;
+  width: 100%;
 }
 
-/* LOADING SPINNER */
-#loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  color: var(--muted);
-  z-index: 10;
+/* Forçando o estilo das bolhas via CSS caso o styleOptions falhe */
+.webchat__bubble__content {
+  border-radius: 10px !important;
 }
 
-.spinner {
-  width: 35px;
-  height: 35px;
-  border: 3px solid rgba(255,255,255,0.1);
-  border-top-color: var(--green);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* AJUSTES MOBILE */
-@media (max-width: 600px) {
-  .chat-container { width: 100%; height: 100%; border-radius: 0; }
-  .header-sub { display: none; }
-  .logo { height: 18px; }
+button{
+  background:var(--green-soft); border:1px solid var(--green); color:white;
+  padding:8px 14px; border-radius:14px; cursor:pointer; font-weight:600;
 }
 </style>
 </head>
-
 <body>
 
 <div class="chat-container">
-
   <div class="chat-header">
-    <div class="chat-header-left">
+    <div style="display:flex; align-items:center; gap:15px;">
       <img class="logo" src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" />
-      <div class="header-text">
-        <div class="header-title">Assistente Triunfo</div>
-        <div class="header-sub">Atendimento inteligente</div>
-      </div>
+      <div style="font-weight:700; font-size:16px;">Assistente Triunfo</div>
     </div>
-
-    <div style="display:flex;align-items:center;gap:15px;">
-      <div class="status">
-        <div class="status-dot"></div>
-        <span style="opacity: 0.8">Online</span>
-      </div>
-      <button onclick="restartChat()" id="btn-limpar">Limpar</button>
-    </div>
+    <button onclick="restartChat()">Limpar conversa</button>
   </div>
 
-  <div id="webchat">
-    <div id="loader">
-      <div class="spinner"></div>
-      <span style="font-size: 13px;">Iniciando conversa...</span>
-    </div>
+  <div id="webchat-wrapper">
+    <div id="webchat"></div>
   </div>
-
 </div>
 
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-
 <script>
 const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
 
-/* Avatar Triunfo */
-const avatarSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><circle cx="64" cy="64" r="64" fill="#22C55E"/><text x="64" y="85" text-anchor="middle" font-size="80" font-weight="900" font-family="Segoe UI, Arial" fill="#ffffff">T</text></svg>`;
-const botAvatar = "data:image/svg+xml;utf8," + encodeURIComponent(avatarSVG);
-
-async function getToken(){
-  try {
-    const response = await fetch("https://directline.botframework.com/v3/directline/tokens/generate",{
-      method:"POST",
-      headers:{ "Authorization":"Bearer " + directLineSecret }
-    });
-    const { token } = await response.json();
-    return token;
-  } catch (e) {
-    console.error("Erro ao obter token", e);
-    return null;
-  }
-}
-
-async function startChat(){
-  const chatDiv = document.getElementById("webchat");
-  const btn = document.getElementById("btn-limpar");
-
-  // UX: Mostra o loading limpando o chat anterior
-  btn.disabled = true;
-  chatDiv.innerHTML = `<div id="loader"><div class="spinner"></div><span>Conectando...</span></div>`;
-
-  const token = await getToken();
-
-  if(!token) {
-    chatDiv.innerHTML = `<div id="loader">Erro ao conectar. Tente atualizar a página.</div>`;
-    btn.disabled = false;
-    return;
-  }
-
-  const directLine = window.WebChat.createDirectLine({ token });
+async function startChat() {
+  const tokenResponse = await fetch("https://directline.botframework.com/v3/directline/tokens/generate", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + directLineSecret }
+  });
+  const { token } = await tokenResponse.json();
 
   const styleOptions = {
-    backgroundColor: "transparent",
-    accent: "#22C55E",
-
-    botAvatarImage: botAvatar,
-    botAvatarInitials: "T",
-    userAvatarInitials: "Eu",
-
-    // BOLHAS COMPACTAS E CORES NOVAS
-    bubbleBackground: "#374151",      // Cinza Bot
-    bubbleTextColor: "#FFFFFF",
-    bubbleBorderColor: "rgba(255,255,255,0.05)",
-    bubbleBorderRadius: 12,
+    backgroundColor: 'transparent',
     
-    bubbleFromUserBackground: "#FFFFFF", // Branco Usuário
-    bubbleFromUserTextColor: "#000000",
-    bubbleFromUserBorderRadius: 12,
-
-    bubblePadding: 8,       // Menor padding
-    bubbleMinHeight: 32,    // Menor altura
-    fontSizeSmall: "13px",
-
-    // CAIXA DE ENVIO
-    sendBoxBackground: "rgba(0,0,0,.3)",
-    sendBoxTextColor: "#fff",
-    sendBoxBorderTop: "1px solid rgba(255,255,255,.1)",
+    // Bolhas do Bot (Cinza)
+    bubbleBackground: '#374151',
+    bubbleTextColor: 'white',
+    bubbleBorderRadius: 10,
+    bubblePadding: 8, // Bolha menor
     
-    hideUploadButton: true
+    // Bolhas do Usuário (Branco)
+    bubbleFromUserBackground: '#FFFFFF',
+    bubbleFromUserTextColor: 'black',
+    bubbleFromUserBorderRadius: 10,
+    bubbleFromUserPadding: 8, // Bolha menor
+    
+    // Tamanhos gerais
+    bubbleMinHeight: 20,
+    bubbleMaxWidth: 450,
+    fontSizeSmall: '12px',
+
+    // Barra de Digitação
+    sendBoxBackground: 'rgba(0,0,0,0.4)',
+    sendBoxTextColor: 'white',
+    sendBoxHeight: 50
   };
 
-  // Limpa o loader antes de renderizar
-  chatDiv.innerHTML = "";
-
-  window.WebChat.renderWebChat(
-    {
-      directLine: directLine,
-      styleOptions: styleOptions,
-      locale: "pt-BR",
-      userID: 'user-' + Math.random().toString(36).substr(2, 9) // ID aleatório para cada nova conversa
-    },
-    chatDiv
-  );
-
-  btn.disabled = false;
+  window.WebChat.renderWebChat({
+    directLine: window.WebChat.createDirectLine({ token }),
+    styleOptions: styleOptions,
+    locale: 'pt-BR'
+  }, document.getElementById('webchat'));
 }
 
-function restartChat(){
+// FUNÇÃO RESTART CORRIGIDA
+function restartChat() {
+  const wrapper = document.getElementById('webchat-wrapper');
+  // Removemos o elemento antigo e criamos um novo do zero para limpar a memória do componente
+  wrapper.innerHTML = '<div id="webchat"></div>';
   startChat();
 }
 
 startChat();
 </script>
-
 </body>
 </html>
