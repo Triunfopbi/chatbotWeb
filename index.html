@@ -11,52 +11,67 @@
   --green-soft:rgba(34,197,94,.18); --border:rgba(255,255,255,.08); 
   --text:#E8EEFC; --muted:#9CA3AF;
 }
+
 *{box-sizing:border-box;}
 html,body{height:100%; margin:0; background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel)); color:var(--text); overflow: hidden;}
-body{ display:flex; justify-content:center; align-items:center; font-family: Segoe UI, sans-serif; }
+body{ display:flex; justify-content:center; align-items:center; font-family: 'Segoe UI', sans-serif; }
 
-.chat-container{
+/* AJUSTE DO NOVO LAYOUT */
+.wrap { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+
+.shell {
   width: 95%; max-width: 1100px; height: 90vh;
-  background:rgba(15,23,42,.75); border:1px solid var(--border);
-  border-radius:20px; display:flex; flex-direction:column; overflow:hidden;
-  backdrop-filter:blur(10px);
+  background: rgba(15, 23, 42, .75); border: 1px solid var(--border);
+  border-radius: 20px; display: flex; flex-direction: column; overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
-.chat-header{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 20px; border-bottom:1px solid var(--border); background:rgba(0,0,0,.3);
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,.3);
 }
 
-.logo{ height:22px; }
+.brand { display: flex; align-items: center; gap: 15px; }
+.logoWrap img { height: 22px; }
+.meta .title { font-weight: 700; font-size: 16px; }
+.meta .subtitle { font-size: 12px; color: var(--muted); }
+.meta .subtitle a { color: var(--muted); text-decoration: none; }
+.meta .subtitle a:hover { text-decoration: underline; color: var(--green); }
 
-/* ÁREA DO CHAT - O segredo está aqui */
+.actions { display: flex; align-items: center; gap: 15px; }
+.statusPill { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.statusDot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+/* ÁREA DO CHAT FIXADA */
 #webchat-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  background: transparent;
 }
 
-#webchat {
-  height: 100%;
-  width: 100%;
+#webchat { height: 100%; width: 100%; }
+
+footer {
+  padding: 10px 20px; font-size: 11px; color: var(--muted);
+  display: flex; justify-content: space-between;
+  border-top: 1px solid var(--border); background: rgba(0,0,0,0.2);
 }
 
-/* Forçando o estilo das bolhas via CSS caso o styleOptions falhe */
-.webchat__bubble__content {
-  border-radius: 10px !important;
+button {
+  background: var(--green-soft); border: 1px solid var(--green); color: white;
+  padding: 8px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s;
 }
+button:hover { background: rgba(34,197,94, 0.3); }
 
-button{
-  background:var(--green-soft); border:1px solid var(--green); color:white;
-  padding:8px 14px; border-radius:14px; cursor:pointer; font-weight:600;
-}
+/* Customização forçada das bolhas via CSS */
+.webchat__bubble__content { border-radius: 10px !important; }
+.webchat__bubble__content:not(.webchat__bubble--from-user) { background-color: #374151 !important; color: white !important; }
 </style>
 </head>
 <body>
-
-
 
 <div class="wrap">
     <div class="shell">
@@ -67,7 +82,7 @@ button{
           </div>
 
           <div class="meta">
-            <div class="title">Assistente Triunfo</div>
+            <div class="title">Triunfo Bot</div>
             <div class="subtitle">
               Atendimento inteligente •
               <a href="https://triunfologistica.com.br/" target="_blank" rel="noopener">triunfologistica.com.br</a>
@@ -77,14 +92,16 @@ button{
 
         <div class="actions">
           <div class="statusPill" title="Status do bot">
-            <span id="botStateText">Conectando…</span>
+            <span id="botStateText">Online</span>
             <span id="statusDot" class="statusDot"></span>
           </div>
           <button onclick="restartChat()" id="btn-limpar">Limpar Conversa</button>
         </div>
       </header>
 
-      <div id="webchat"></div>
+      <div id="webchat-wrapper">
+        <div id="webchat"></div>
+      </div>
 
       <footer>
         <div>Triunfo Logística • WebChat</div>
@@ -111,23 +128,23 @@ async function startChat() {
     bubbleBackground: '#374151',
     bubbleTextColor: 'white',
     bubbleBorderRadius: 10,
-    bubblePadding: 8, // Bolha menor
+    bubblePadding: 8,
     
     // Bolhas do Usuário (Branco)
     bubbleFromUserBackground: '#FFFFFF',
     bubbleFromUserTextColor: 'black',
     bubbleFromUserBorderRadius: 10,
-    bubbleFromUserPadding: 8, // Bolha menor
+    bubbleFromUserPadding: 8,
     
-    // Tamanhos gerais
-    bubbleMinHeight: 20,
+    bubbleMinHeight: 30,
     bubbleMaxWidth: 450,
     fontSizeSmall: '12px',
 
     // Barra de Digitação
     sendBoxBackground: 'rgba(0,0,0,0.4)',
     sendBoxTextColor: 'white',
-    sendBoxHeight: 50
+    sendBoxHeight: 50,
+    hideUploadButton: true
   };
 
   window.WebChat.renderWebChat({
@@ -137,10 +154,9 @@ async function startChat() {
   }, document.getElementById('webchat'));
 }
 
-// FUNÇÃO RESTART CORRIGIDA
 function restartChat() {
   const wrapper = document.getElementById('webchat-wrapper');
-  // Removemos o elemento antigo e criamos um novo do zero para limpar a memória do componente
+  // Recria a div webchat do zero para evitar bugs de CSS
   wrapper.innerHTML = '<div id="webchat"></div>';
   startChat();
 }
