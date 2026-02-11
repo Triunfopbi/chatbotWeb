@@ -9,113 +9,119 @@
 
 <style>
 :root{
-  --bg-dark:#070A10;
-  --bg-panel:#0B1220;
-  --green:#22C55E;
-  --green-soft:rgba(34,197,94,.18);
-  --border:rgba(255,255,255,.08);
-  --text:#E8EEFC;
-  --muted:#9CA3AF;
+  --bg-dark: #070A10;
+  --bg-panel: #0B1220;
+  --green: #22C55E;
+  --green-soft: rgba(34,197,94,.18);
+  --border: rgba(255,255,255,.08);
+  --text: #E8EEFC;
+  --muted: #9CA3AF;
 }
 
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0;
-  font-family:Segoe UI, Arial, sans-serif;
-  background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel));
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bg-dark), var(--bg-panel));
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.chat-container{
-  width:1100px;
-  height:90vh;
-  background:rgba(15,23,42,.75);
-  border:1px solid var(--border);
-  border-radius:20px;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  backdrop-filter:blur(10px);
+.chat-container {
+  width: 1100px;
+  height: 90vh;
+  background: rgba(15, 23, 42, .75);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 /* HEADER */
-.chat-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 20px;
-  border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,.3);
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, .3);
+  flex-shrink: 0; /* Impede o header de encolher */
 }
 
-.chat-header-left{
-  display:flex;
-  align-items:center;
-  gap:15px;
+.chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.logo{
-  height:22px;
+.logo { height: 22px; }
+
+.header-text {
+  display: flex;
+  flex-direction: column;
 }
 
-.header-text{
-  display:flex;
-  flex-direction:column;
+.header-title {
+  font-weight: 700;
+  font-size: 16px;
 }
 
-.header-title{
-  font-weight:700;
-  font-size:16px;
+.header-sub {
+  font-size: 12px;
+  color: var(--muted);
 }
 
-.header-sub{
-  font-size:12px;
-  color:var(--muted);
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
 }
 
-.status{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:13px;
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
 }
 
-.status-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 8px var(--green);
+button {
+  background: var(--green-soft);
+  border: 1px solid var(--green);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
-button{
-  background:var(--green-soft);
-  border:1px solid var(--green);
-  color:white;
-  padding:8px 14px;
-  border-radius:14px;
-  cursor:pointer;
-  font-weight:600;
-}
-
-button:hover{
-  background:rgba(34,197,94,.35);
+button:hover {
+  background: rgba(34,197,94,.35);
 }
 
 /* WEBCHAT AREA */
-#webchat{
-  flex:1;
-  padding:15px;
-  min-height:0;
+#webchat {
+  flex: 1; /* Ocupa o restante do espaço */
+  position: relative;
+  overflow: hidden;
+  /* Removi o padding direto aqui para o WebChat controlar melhor as margens */
 }
 
-#webchat > *{
-  height:100% !important;
+/* CORREÇÃO DO BUG: O WebChat precisa gerenciar sua altura interna */
+#webchat > div {
+  height: 100%;
+  width: 100%;
 }
+
 </style>
 </head>
 
@@ -137,7 +143,7 @@ button:hover{
         <div class="status-dot"></div>
         Online
       </div>
-      <button onclick="restartChat()">Limpar conversa</button>
+      <button onclick="restartChat()" id="btn-limpar">Limpar conversa</button>
     </div>
   </div>
 
@@ -149,10 +155,8 @@ button:hover{
 
 <script>
 /* ==========================================
-   ⚠️ TOKEN TEMPORÁRIO DIRETO NO HTML
-   (Depois vamos mover pro backend)
+   ⚠️ TOKEN TEMPORÁRIO
 ========================================== */
-
 const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
 
 /* Avatar SVG T */
@@ -167,63 +171,103 @@ fill="#ffffff">T</text>
 `;
 
 const botAvatar = "data:image/svg+xml;utf8," + encodeURIComponent(avatarSVG);
-
 let directLine;
 
+// Função para obter token
 async function getToken(){
-  const response = await fetch("https://directline.botframework.com/v3/directline/tokens/generate",{
-    method:"POST",
-    headers:{ "Authorization":"Bearer " + directLineSecret }
-  });
-
-  const { token } = await response.json();
-  return token;
+  try {
+    const response = await fetch("https://directline.botframework.com/v3/directline/tokens/generate",{
+      method:"POST",
+      headers:{ "Authorization":"Bearer " + directLineSecret }
+    });
+    const { token } = await response.json();
+    return token;
+  } catch (err) {
+    console.error("Erro ao pegar token:", err);
+    return null;
+  }
 }
 
 async function startChat(){
+  // Desabilita botão enquanto carrega para evitar cliques duplos
+  const btn = document.getElementById('btn-limpar');
+  if(btn) btn.disabled = true;
 
   const token = await getToken();
 
+  if(!token) {
+    if(btn) btn.disabled = false;
+    alert("Erro ao conectar com o chat.");
+    return;
+  }
+
   directLine = window.WebChat.createDirectLine({ token });
 
+  /* --- CONFIGURAÇÕES VISUAIS --- */
   const styleOptions = {
     backgroundColor: "transparent",
     accent: "#22C55E",
 
+    // Avatares
     botAvatarImage: botAvatar,
     botAvatarInitials: "T",
-    userAvatarInitials: "Você",
+    userAvatarInitials: "Eu",
 
-    bubbleBackground: "rgba(255,255,255,.05)",
-    bubbleTextColor: "#fff",
-    bubbleBorderColor: "rgba(255,255,255,.1)",
+    // BOLHAS (Ajuste de tamanho e cores)
+    // Bot (Cinza)
+    bubbleBackground: "#374151",      // Cinza escuro (Gray 700)
+    bubbleTextColor: "#FFFFFF",       // Texto branco
+    bubbleBorderColor: "#4B5563",
+    bubbleBorderRadius: 10,           // Mais arredondado
 
-    bubbleFromUserBackground: "rgba(34,197,94,.25)",
-    bubbleFromUserTextColor: "#fff",
+    // Usuário (Branco)
+    bubbleFromUserBackground: "#FFFFFF", // Fundo Branco
+    bubbleFromUserTextColor: "#000000",  // Texto Preto (para leitura)
+    bubbleFromUserBorderRadius: 10,
 
+    // Tamanhos (Menores)
+    bubblePadding: 10,      // Espaçamento interno menor
+    bubbleMinHeight: 30,    // Altura mínima menor
+    fontSizeSmall: "85%",   // Texto levemente menor
+
+    // Caixa de Envio
     sendBoxBackground: "rgba(0,0,0,.35)",
     sendBoxTextColor: "#fff",
     sendBoxBorderTop: "1px solid rgba(255,255,255,.1)",
+    sendBoxHeight: 50, // Altura da barra de envio
 
-    hideUploadButton:true
+    hideUploadButton: true
   };
 
+  // Limpa o container
   document.getElementById("webchat").innerHTML = "";
 
+  // Renderiza
   window.WebChat.renderWebChat(
     {
       directLine: directLine,
       styleOptions: styleOptions,
-      locale:"pt-BR"
+      locale: "pt-BR"
     },
     document.getElementById("webchat")
   );
+
+  // Reabilita botão
+  if(btn) btn.disabled = false;
+  
+  // Foca na caixa de texto
+  setTimeout(() => {
+     const input = document.querySelector('[data-id="webchat-sendbox-input"]');
+     if(input) input.focus();
+  }, 500);
 }
 
 function restartChat(){
+  // Opcional: Encerrar conexão antiga se necessário, mas recarregar o webchat já reinicia a visualização
   startChat();
 }
 
+// Inicia ao carregar
 startChat();
 </script>
 
