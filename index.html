@@ -1,407 +1,231 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Triunfo Logística • Assistente Virtual</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Assistente Triunfo</title>
 
-  <link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
+<link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
 
-  <style>
-    :root{
-      --bg0:#070A10;
-      --bg1:#0B1220;
-      --card:rgba(13,22,40,.72);
-      --stroke:rgba(31,42,68,.85);
-      --text:#E8EEFC;
-      --muted:#A8B3CF;
-      --brand:#22C55E;
-      --brandSoft:rgba(34,197,94,.18);
-      --blue:#38BDF8;
-      --blueSoft:rgba(56,189,248,.12);
-      --danger:#EF4444;
-      --radius:18px;
-      --shadow: 0 18px 50px rgba(0,0,0,.55);
-    }
+<style>
+:root{
+  --bg-dark:#070A10;
+  --bg-panel:#0B1220;
+  --green:#22C55E;
+  --green-soft:rgba(34,197,94,.18);
+  --border:rgba(255,255,255,.08);
+  --text:#E8EEFC;
+  --muted:#9CA3AF;
+}
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:Segoe UI, Arial, sans-serif;
+  background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel));
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(900px 520px at 12% 10%, var(--brandSoft), transparent 60%),
-        radial-gradient(900px 520px at 88% 15%, var(--blueSoft), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow:hidden;
-    }
+.chat-container{
+  width:1100px;
+  height:90vh;
+  background:rgba(15,23,42,.75);
+  border:1px solid var(--border);
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+}
 
-    .wrap{
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:22px;
-    }
+/* HEADER */
+.chat-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,.3);
+}
 
-    .shell{
-      width:min(1120px, 100%);
-      height:min(760px, 100%);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      background: linear-gradient(180deg, rgba(13,22,40,.78), rgba(13,22,40,.55));
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      backdrop-filter: blur(10px);
-    }
+.chat-header-left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
 
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 16px;
-      background: rgba(10,16,30,.55);
-      border-bottom:1px solid rgba(31,42,68,.85);
-    }
+.logo{
+  height:22px;
+}
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+.header-text{
+  display:flex;
+  flex-direction:column;
+}
 
-    .logoWrap{
-      height:38px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:14px;
-      border:1px solid rgba(34,197,94,.22);
-      background: rgba(34,197,94,.06);
-    }
+.header-title{
+  font-weight:700;
+  font-size:16px;
+}
 
-    .logoWrap img{ height:18px; display:block; }
+.header-sub{
+  font-size:12px;
+  color:var(--muted);
+}
 
-    .meta{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:3px;
-    }
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+}
 
-    .title{
-      font-weight:900;
-      letter-spacing:.2px;
-      line-height:1.05;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+}
 
-    .subtitle{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:12px;
-      color:var(--muted);
-      flex-wrap:wrap;
-    }
+button{
+  background:var(--green-soft);
+  border:1px solid var(--green);
+  color:white;
+  padding:8px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:600;
+}
 
-    .statusPill{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(31,42,68,.85);
-      background: rgba(17,24,39,.35);
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-    }
+button:hover{
+  background:rgba(34,197,94,.35);
+}
 
-    .statusDot{
-      width:8px;height:8px;border-radius:999px;
-      background: var(--danger);
-      box-shadow: 0 0 0 4px rgba(239,68,68,.12);
-    }
-    .statusDot.ok{
-      background: var(--brand);
-      box-shadow: 0 0 0 4px rgba(34,197,94,.12);
-    }
+/* WEBCHAT AREA */
+#webchat{
+  flex:1;
+  padding:15px;
+  min-height:0;
+}
 
-    /* Avatar “interativo” do header */
-    .face{
-      width:26px;height:26px;
-      border-radius:999px;
-      border:1px solid rgba(31,42,68,.85);
-      background: rgba(255,255,255,.06);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      flex:0 0 auto;
-    }
-    .face img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .pulse{
-      animation:pulse 1.1s infinite;
-    }
-    @keyframes pulse{
-      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.35); }
-      70%  { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
-      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
-    }
-
-    .actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    button{
-      appearance:none;
-      border:1px solid rgba(31,42,68,.85);
-      background: rgba(17,24,39,.35);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:800;
-      transition:.15s ease;
-    }
-    button:hover{ transform: translateY(-1px); background: rgba(17,24,39,.55); }
-    button.primary{
-      border-color: rgba(34,197,94,.35);
-      background: linear-gradient(180deg, rgba(34,197,94,.22), rgba(34,197,94,.12));
-    }
-
-    #webchat{
-      flex:1;
-      min-height:0;
-      padding:14px;
-    }
-
-    footer{
-      padding:10px 16px;
-      border-top:1px solid rgba(31,42,68,.55);
-      color: rgba(168,179,207,.85);
-      font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      background: rgba(10,16,30,.40);
-    }
-
-    a{ color: var(--blue); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-  </style>
+#webchat > *{
+  height:100% !important;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="shell">
-      <header>
-        <div class="brand">
-          <div class="logoWrap" title="Triunfo Logística">
-            <img src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" alt="Triunfo" />
-          </div>
 
-          <div class="meta">
-            <div class="title">Assistente Triunfo</div>
-            <div class="subtitle">
-              Atendimento inteligente •
-              <a href="https://triunfologistica.com.br/" target="_blank" rel="noopener">triunfologistica.com.br</a>
-            </div>
-          </div>
-        </div>
+<div class="chat-container">
 
-        <div class="actions">
-          <div class="statusPill" title="Status do bot">
-            <div class="face" id="botFace">
-              <!-- avatar do header (quadrado/ícone fica melhor, mas usando logo por enquanto) -->
-              <img
-                id="botFaceImg"
-                src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png"
-                alt="Bot"
-              />
-            </div>
-            <span id="botStateText">Conectando…</span>
-            <span id="statusDot" class="statusDot"></span>
-          </div>
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <img class="logo" src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" />
+      <div class="header-text">
+        <div class="header-title">Assistente Triunfo</div>
+        <div class="header-sub">Atendimento inteligente • triunfologistica.com.br</div>
+      </div>
+    </div>
 
-          <button id="btnRestart" class="primary">Limpar conversa</button>
-          <button id="btnOpen">Abrir</button>
-        </div>
-      </header>
-
-      <div id="webchat"></div>
-
-      <footer>
-        <div>Triunfo Logística • WebChat</div>
-        <div>© 2026</div>
-      </footer>
+    <div style="display:flex;align-items:center;gap:15px;">
+      <div class="status">
+        <div class="status-dot"></div>
+        Online
+      </div>
+      <button onclick="restartChat()">Limpar conversa</button>
     </div>
   </div>
 
-  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+  <div id="webchat"></div>
 
-  <script>
-    // ==============================
-    // ⚠️ TEMPORÁRIO (SEM BACKEND)
-    // ==============================
-    const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
+</div>
 
-    const BOT_AVATAR =
-      "https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png";
+<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 
-    // ==============================
+<script>
+/* ==========================================
+   ⚠️ TOKEN TEMPORÁRIO DIRETO NO HTML
+   (Depois vamos mover pro backend)
+========================================== */
 
-    const statusDot = document.getElementById("statusDot");
-    const botStateText = document.getElementById("botStateText");
-    const botFace = document.getElementById("botFace");
-    const botFaceImg = document.getElementById("botFaceImg");
+const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
 
-    botFaceImg.src = BOT_AVATAR;
+/* Avatar SVG T */
+const avatarSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+<circle cx="64" cy="64" r="64" fill="#22C55E"/>
+<text x="64" y="85" text-anchor="middle"
+font-size="80" font-weight="900"
+font-family="Segoe UI, Arial"
+fill="#ffffff">T</text>
+</svg>
+`;
 
-    function setConn(ok, text){
-      statusDot.classList.toggle("ok", !!ok);
-      botStateText.textContent = text;
-    }
+const botAvatar = "data:image/svg+xml;utf8," + encodeURIComponent(avatarSVG);
 
-    function setTyping(isTyping){
-      botFace.classList.toggle("pulse", !!isTyping);
-      if (isTyping) botStateText.textContent = "Respondendo…";
-    }
+let directLine;
 
-    async function getToken(){
-      const tokenResp = await fetch("https://directline.botframework.com/v3/directline/tokens/generate", {
-        method: "POST",
-        headers: { "Authorization": "Bearer " + directLineSecret }
-      });
+async function getToken(){
+  const response = await fetch("https://directline.botframework.com/v3/directline/tokens/generate",{
+    method:"POST",
+    headers:{ "Authorization":"Bearer " + directLineSecret }
+  });
 
-      if (!tokenResp.ok) {
-        const txt = await tokenResp.text();
-        throw new Error("Falha ao gerar token: " + txt);
-      }
+  const { token } = await response.json();
+  return token;
+}
 
-      const { token } = await tokenResp.json();
-      return token;
-    }
+async function startChat(){
 
-    let directLine;
-    let store;
+  const token = await getToken();
 
-    function createStore(){
-      return window.WebChat.createStore({}, () => next => action => {
-        if (action.type === "DIRECT_LINE/CONNECT_FULFILLED") {
-          setConn(true, "Online");
-          setTyping(false);
-        }
+  directLine = window.WebChat.createDirectLine({ token });
 
-        if (action.type === "DIRECT_LINE/INCOMING_ACTIVITY") {
-          const a = action.payload?.activity;
+  const styleOptions = {
+    backgroundColor: "transparent",
+    accent: "#22C55E",
 
-          // Bot digitando
-          if (a?.type === "typing") {
-            setTyping(true);
-          }
+    botAvatarImage: botAvatar,
+    botAvatarInitials: "T",
+    userAvatarInitials: "Você",
 
-          // Quando chega mensagem do bot, tira o "digitando"
-          if (a?.type === "message" && a?.from?.role === "bot") {
-            setTyping(false);
-            setConn(true, "Online");
-          }
-        }
+    bubbleBackground: "rgba(255,255,255,.05)",
+    bubbleTextColor: "#fff",
+    bubbleBorderColor: "rgba(255,255,255,.1)",
 
-        return next(action);
-      });
-    }
+    bubbleFromUserBackground: "rgba(34,197,94,.25)",
+    bubbleFromUserTextColor: "#fff",
 
-    async function startChat(){
-      setConn(false, "Conectando…");
-      setTyping(false);
+    sendBoxBackground: "rgba(0,0,0,.35)",
+    sendBoxTextColor: "#fff",
+    sendBoxBorderTop: "1px solid rgba(255,255,255,.1)",
 
-      const token = await getToken();
-      directLine = window.WebChat.createDirectLine({ token });
-      store = createStore();
+    hideUploadButton:true
+  };
 
-      const styleOptions = {
-        primaryFont: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial",
-        backgroundColor: "transparent",
+  document.getElementById("webchat").innerHTML = "";
 
-        // Avatar nas mensagens
-        botAvatarImage: BOT_AVATAR,
-        botAvatarInitials: "TR",
-        userAvatarInitials: "VOCÊ",
+  window.WebChat.renderWebChat(
+    {
+      directLine: directLine,
+      styleOptions: styleOptions,
+      locale:"pt-BR"
+    },
+    document.getElementById("webchat")
+  );
+}
 
-        // Bolhas
-        bubbleBorderRadius: 16,
-        bubbleFromUserBorderRadius: 16,
+function restartChat(){
+  startChat();
+}
 
-        bubbleBackground: "rgba(17,24,39,.55)",
-        bubbleTextColor: "#E8EEFC",
-        bubbleBorderColor: "rgba(31,42,68,.85)",
+startChat();
+</script>
 
-        bubbleFromUserBackground: "rgba(34,197,94,.18)",
-        bubbleFromUserTextColor: "#E8EEFC",
-        bubbleFromUserBorderColor: "rgba(34,197,94,.35)",
-
-        // Área de digitação
-        sendBoxBackground: "rgba(10,16,30,.55)",
-        sendBoxTextColor: "#E8EEFC",
-        sendBoxBorderTop: "1px solid rgba(31,42,68,.65)",
-
-        // Accent verde
-        accent: "#22C55E",
-
-        paddingRegular: 10
-      };
-
-      const webchatEl = document.getElementById("webchat");
-      window.WebChat.renderWebChat(
-        {
-          directLine,
-          store,
-          locale: "pt-BR",
-          styleOptions
-        },
-        webchatEl
-      );
-
-      setConn(true, "Online");
-    }
-
-    document.getElementById("btnOpen").addEventListener("click", () => {
-      window.open(window.location.href, "_blank");
-    });
-
-    document.getElementById("btnRestart").addEventListener("click", async () => {
-      document.getElementById("webchat").innerHTML = "";
-      try {
-        await startChat();
-      } catch (e) {
-        console.error(e);
-        setConn(false, "Erro ao conectar");
-      }
-    });
-
-    startChat().catch(err => {
-      console.error(err);
-      setConn(false, "Erro ao conectar");
-    });
-  </script>
 </body>
 </html>
-     
-
