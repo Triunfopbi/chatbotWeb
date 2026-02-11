@@ -58,30 +58,40 @@ button{
 
 
 
-<div class="chat-container">
-  <div class="chat-header">
-    <div style="display:flex; align-items:center; gap:15px;">
-      <img class="logo" src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" />
-      <div style="font-weight:700; font-size:16px;">Triunfo Bot</div>
-          <div class="header-text">
-            <div class="header-title">Triunfo Bot</div>
-            <div class="header-sub">
-                <a href="https://triunfologistica.com.br" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   style="color: var(--muted); text-decoration: underline;">
-                   triunfologistica.com.br
-                </a>
-              </div>
-          </div> 
-        </div>
-    <button onclick="restartChat()">Limpar conversa</button>
-  </div>
+<div class="wrap">
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <div class="logoWrap" title="Triunfo Logística">
+            <img src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" alt="Triunfo" />
+          </div>
 
-  <div id="webchat-wrapper">
-    <div id="webchat"></div>
+          <div class="meta">
+            <div class="title">Assistente Triunfo</div>
+            <div class="subtitle">
+              Atendimento inteligente •
+              <a href="https://triunfologistica.com.br/" target="_blank" rel="noopener">triunfologistica.com.br</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="statusPill" title="Status do bot">
+            <span id="botStateText">Conectando…</span>
+            <span id="statusDot" class="statusDot"></span>
+          </div>
+          <button onclick="restartChat()" id="btn-limpar">Limpar Conversa</button>
+        </div>
+      </header>
+
+      <div id="webchat"></div>
+
+      <footer>
+        <div>Triunfo Logística • WebChat</div>
+        <div>© 2026</div>
+      </footer>
+    </div>
   </div>
-</div>
 
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
