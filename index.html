@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Assistente Triunfo</title>
+<link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
 <style>
 :root{
   --bg-dark:#070A10;
@@ -184,3 +191,98 @@ footer{
   accent-color:#dc2626 !important;
 }
 </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <div class="logoWrap" title="Triunfo Logística">
+            <img src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" alt="Triunfo" />
+          </div>
+
+          <div class="meta">
+            <div class="title">Triunfo Bot</div>
+            <div class="subtitle">
+              Atendimento inteligente •
+              <a href="https://triunfologistica.com.br/" target="_blank" rel="noopener">triunfologistica.com.br</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="statusPill" title="Status do bot">
+            <span id="botStateText">Online</span>
+            <span id="statusDot" class="statusDot"></span>
+          </div>
+          <button onclick="restartChat()" id="btn-limpar">Limpar Conversa</button>
+        </div>
+      </header>
+
+      <div id="webchat-wrapper">
+        <div id="webchat"></div>
+      </div>
+
+      <footer>
+        <div>Triunfo Logística • WebChat</div>
+        <div>© 2026</div>
+      </footer>
+    </div>
+  </div>
+
+<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+<script>
+const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
+
+async function startChat() {
+  const tokenResponse = await fetch("https://directline.botframework.com/v3/directline/tokens/generate", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + directLineSecret }
+  });
+  const { token } = await tokenResponse.json();
+
+  const styleOptions = {
+    backgroundColor: 'transparent',
+    
+    // Bolhas do Bot (Cinza)
+    bubbleBackground: '#374151',
+    bubbleTextColor: 'white',
+    bubbleBorderRadius: 10,
+    bubblePadding: 8,
+    
+    // Bolhas do Usuário (Branco)
+    bubbleFromUserBackground: '#FFFFFF',
+    bubbleFromUserTextColor: 'black',
+    bubbleFromUserBorderRadius: 10,
+    bubbleFromUserPadding: 8,
+    
+    bubbleMinHeight: 30,
+    bubbleMaxWidth: 450,
+    fontSizeSmall: '12px',
+
+    // Barra de Digitação
+    sendBoxBackground: 'rgba(0,0,0,0.4)',
+    sendBoxTextColor: 'white',
+    sendBoxHeight: 50,
+    hideUploadButton: true
+  };
+
+  window.WebChat.renderWebChat({
+    directLine: window.WebChat.createDirectLine({ token }),
+    styleOptions: styleOptions,
+    locale: 'pt-BR'
+  }, document.getElementById('webchat'));
+}
+
+function restartChat() {
+  const wrapper = document.getElementById('webchat-wrapper');
+  // Recria a div webchat do zero para evitar bugs de CSS
+  wrapper.innerHTML = '<div id="webchat"></div>';
+  startChat();
+}
+
+startChat();
+</script>
+</body>
+</html>
