@@ -1,167 +1,186 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Assistente Triunfo</title>
-<link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
 <style>
 :root{
-  --bg-dark:#070A10; --bg-panel:#0B1220; --green:#22C55E; 
-  --green-soft:rgba(34,197,94,.18); --border:rgba(255,255,255,.08); 
-  --text:#E8EEFC; --muted:#9CA3AF;
+  --bg-dark:#070A10;
+  --bg-panel:#0B1220;
+  --green:#22C55E;
+  --green-soft:rgba(34,197,94,.18);
+  --border:rgba(255,255,255,.08);
+  --text:#E8EEFC;
+  --muted:#9CA3AF;
 }
 
 *{box-sizing:border-box;}
-html,body{height:100%; margin:0; background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel)); color:var(--text); overflow: hidden;}
-body{ display:flex; justify-content:center; align-items:center; font-family: 'Segoe UI', sans-serif; }
-
-/* AJUSTE DO NOVO LAYOUT */
-.wrap { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-
-.shell {
-  width: 95%; max-width: 1100px; height: 90vh;
-  background: rgba(15, 23, 42, .75); border: 1px solid var(--border);
-  border-radius: 20px; display: flex; flex-direction: column; overflow: hidden;
-  backdrop-filter: blur(10px);
+html,body{
+  height:100%;
+  margin:0;
+  background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel));
+  color:var(--text);
+  overflow:hidden;
+}
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Segoe UI', sans-serif;
 }
 
-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 20px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,.3);
+.wrap{
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.brand { display: flex; align-items: center; gap: 15px; }
-.logoWrap img { height: 22px; }
-.meta .title { font-weight: 700; font-size: 16px; }
-.meta .subtitle { font-size: 12px; color: var(--muted); }
-.meta .subtitle a { color: var(--muted); text-decoration: none; }
-.meta .subtitle a:hover { text-decoration: underline; color: var(--green); }
-
-.actions { display: flex; align-items: center; gap: 15px; }
-.statusPill { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-.statusDot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
-
-/* ÁREA DO CHAT FIXADA */
-#webchat-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  background: transparent;
+.shell{
+  width:95%;
+  max-width:1100px;
+  height:90vh;
+  background:rgba(15, 23, 42, .75);
+  border:1px solid var(--border);
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
 }
 
-#webchat { height: 100%; width: 100%; }
-
-footer {
-  padding: 10px 20px; font-size: 11px; color: var(--muted);
-  display: flex; justify-content: space-between;
-  border-top: 1px solid var(--border); background: rgba(0,0,0,0.2);
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,.3);
 }
 
-button {
-  background: var(--green-soft); border: 1px solid var(--green); color: white;
-  padding: 8px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s;
-}
-button:hover { background: rgba(34,197,94, 0.3); }
+.brand{ display:flex; align-items:center; gap:15px; }
+.logoWrap img{ height:22px; }
+.meta .title{ font-weight:700; font-size:16px; }
+.meta .subtitle{ font-size:12px; color:var(--muted); }
+.meta .subtitle a{ color:var(--muted); text-decoration:none; }
+.meta .subtitle a:hover{ text-decoration:underline; color:var(--green); }
 
-/* Customização forçada das bolhas via CSS */
-.webchat__bubble__content { border-radius: 10px !important; }
-.webchat__bubble__content:not(.webchat__bubble--from-user) { background-color: #374151 !important; color: white !important; }
+.actions{ display:flex; align-items:center; gap:15px; }
+.statusPill{ display:flex; align-items:center; gap:8px; font-size:13px; }
+.statusDot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+}
+
+#webchat-wrapper{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+  background:transparent;
+}
+
+#webchat{ height:100%; width:100%; }
+
+footer{
+  padding:10px 20px;
+  font-size:11px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid var(--border);
+  background:rgba(0,0,0,0.2);
+}
+
+/* deixa verde só o botão do cabeçalho */
+#btn-limpar{
+  background:var(--green-soft);
+  border:1px solid var(--green);
+  color:#fff;
+  padding:8px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+#btn-limpar:hover{
+  background:rgba(34,197,94, 0.3);
+}
+
+/* bolhas */
+.webchat__bubble__content{
+  border-radius:10px !important;
+}
+.webchat__bubble__content:not(.webchat__bubble--from-user){
+  background-color:#374151 !important;
+  color:#fff !important;
+}
+
+/* -------- Adaptive Cards -------- */
+
+/* fundo branco e texto preto */
+#webchat .ac-adaptiveCard{
+  background:#fff !important;
+  color:#000 !important;
+  border-radius:12px !important;
+}
+
+#webchat .ac-textBlock,
+#webchat .ac-label,
+#webchat .ac-input-label,
+#webchat label,
+#webchat input,
+#webchat textarea,
+#webchat select,
+#webchat option{
+  color:#000 !important;
+}
+
+/* campos */
+#webchat input,
+#webchat textarea,
+#webchat select{
+  background:#fff !important;
+  border:1px solid #d1d5db !important;
+  color:#000 !important;
+  border-radius:8px !important;
+}
+
+/* opções/botões dos cards sem borda verde */
+#webchat .ac-pushButton,
+#webchat .ac-actionSet button,
+#webchat .webchat__adaptive-card-renderer button{
+  background:#fff !important;
+  border:none !important;
+  box-shadow:none !important;
+  color:#000 !important;
+  border-radius:10px !important;
+}
+
+/* hover */
+#webchat .ac-pushButton:hover,
+#webchat .ac-actionSet button:hover,
+#webchat .webchat__adaptive-card-renderer button:hover{
+  background:#fee2e2 !important;
+  color:#991b1b !important;
+}
+
+/* selecionado / foco / clique = vermelho */
+#webchat .ac-pushButton:focus,
+#webchat .ac-pushButton:active,
+#webchat .ac-actionSet button:focus,
+#webchat .ac-actionSet button:active,
+#webchat .webchat__adaptive-card-renderer button:focus,
+#webchat .webchat__adaptive-card-renderer button:active{
+  background:#dc2626 !important;
+  color:#fff !important;
+  outline:none !important;
+  box-shadow:0 0 0 2px rgba(220,38,38,.25) !important;
+}
+
+/* radio / checkbox = vermelho */
+#webchat input[type="radio"],
+#webchat input[type="checkbox"]{
+  accent-color:#dc2626 !important;
+}
 </style>
-</head>
-<body>
-
-<div class="wrap">
-    <div class="shell">
-      <header>
-        <div class="brand">
-          <div class="logoWrap" title="Triunfo Logística">
-            <img src="https://triunfologistica.com.br/wp-content/uploads/2023/09/Triunfo_NOVO_horizontal-branca.png" alt="Triunfo" />
-          </div>
-
-          <div class="meta">
-            <div class="title">Triunfo Bot</div>
-            <div class="subtitle">
-              Atendimento inteligente •
-              <a href="https://triunfologistica.com.br/" target="_blank" rel="noopener">triunfologistica.com.br</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <div class="statusPill" title="Status do bot">
-            <span id="botStateText">Online</span>
-            <span id="statusDot" class="statusDot"></span>
-          </div>
-          <button onclick="restartChat()" id="btn-limpar">Limpar Conversa</button>
-        </div>
-      </header>
-
-      <div id="webchat-wrapper">
-        <div id="webchat"></div>
-      </div>
-
-      <footer>
-        <div>Triunfo Logística • WebChat</div>
-        <div>© 2026</div>
-      </footer>
-    </div>
-  </div>
-
-<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-<script>
-const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
-
-async function startChat() {
-  const tokenResponse = await fetch("https://directline.botframework.com/v3/directline/tokens/generate", {
-    method: "POST",
-    headers: { "Authorization": "Bearer " + directLineSecret }
-  });
-  const { token } = await tokenResponse.json();
-
-  const styleOptions = {
-    backgroundColor: 'transparent',
-    
-    // Bolhas do Bot (Cinza)
-    bubbleBackground: '#374151',
-    bubbleTextColor: 'white',
-    bubbleBorderRadius: 10,
-    bubblePadding: 8,
-    
-    // Bolhas do Usuário (Branco)
-    bubbleFromUserBackground: '#FFFFFF',
-    bubbleFromUserTextColor: 'black',
-    bubbleFromUserBorderRadius: 10,
-    bubbleFromUserPadding: 8,
-    
-    bubbleMinHeight: 30,
-    bubbleMaxWidth: 450,
-    fontSizeSmall: '12px',
-
-    // Barra de Digitação
-    sendBoxBackground: 'rgba(0,0,0,0.4)',
-    sendBoxTextColor: 'white',
-    sendBoxHeight: 50,
-    hideUploadButton: true
-  };
-
-  window.WebChat.renderWebChat({
-    directLine: window.WebChat.createDirectLine({ token }),
-    styleOptions: styleOptions,
-    locale: 'pt-BR'
-  }, document.getElementById('webchat'));
-}
-
-function restartChat() {
-  const wrapper = document.getElementById('webchat-wrapper');
-  // Recria a div webchat do zero para evitar bugs de CSS
-  wrapper.innerHTML = '<div id="webchat"></div>';
-  startChat();
-}
-
-startChat();
-</script>
-</body>
-</html>
