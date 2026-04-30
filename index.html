@@ -4,25 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Assistente Triunfo</title>
+
 <link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css" />
+
 <style>
 :root{
-  --bg-dark:#070A10;
-  --bg-panel:#0B1220;
+  --bg-dark:#000000;
+  --bg-panel:#050505;
   --green:#22C55E;
-  --green-soft:rgba(34,197,94,.18);
-  --border:rgba(255,255,255,.08);
-  --text:#E8EEFC;
-  --muted:#9CA3AF;
+  --green-soft:rgba(34,197,94,.12);
+  --border:rgba(255,255,255,.13);
+  --text:#F8FAFC;
+  --muted:#C7CBD1;
   --danger:#DC2626;
 }
 
-*{ box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
 
 html, body{
   height:100%;
   margin:0;
-  background:linear-gradient(180deg,var(--bg-dark),var(--bg-panel));
+  background:#000000;
   color:var(--text);
   overflow:hidden;
 }
@@ -40,13 +44,14 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  background:#000000;
 }
 
 .shell{
   width:95%;
   max-width:1100px;
   height:90vh;
-  background:rgba(15, 23, 42, .75);
+  background:#000000;
   border:1px solid var(--border);
   border-radius:20px;
   display:flex;
@@ -59,28 +64,32 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 20px;
+  min-height:105px;
+  padding:26px 28px;
   border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,.3);
+  background:#050505;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:15px;
+  gap:28px;
 }
 
 .logoWrap img{
-  height:22px;
+  height:48px;
+  width:auto;
+  display:block;
 }
 
 .meta .title{
   font-weight:700;
-  font-size:16px;
+  font-size:22px;
+  color:#ffffff;
 }
 
 .meta .subtitle{
-  font-size:12px;
+  font-size:15px;
   color:var(--muted);
 }
 
@@ -97,22 +106,39 @@ header{
 .actions{
   display:flex;
   align-items:center;
-  gap:15px;
+  gap:28px;
 }
 
 .statusPill{
   display:flex;
   align-items:center;
-  gap:8px;
-  font-size:13px;
+  gap:10px;
+  font-size:16px;
+  color:#ffffff;
 }
 
 .statusDot{
-  width:8px;
-  height:8px;
+  width:10px;
+  height:10px;
   border-radius:50%;
   background:var(--green);
-  box-shadow:0 0 8px var(--green);
+  box-shadow:0 0 12px var(--green);
+}
+
+#btn-limpar{
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green);
+  padding:13px 22px;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:700;
+  font-size:15px;
+  transition:0.2s;
+}
+
+#btn-limpar:hover{
+  background:rgba(34,197,94,0.15);
 }
 
 #webchat-wrapper{
@@ -121,7 +147,7 @@ header{
   flex-direction:column;
   overflow:hidden;
   position:relative;
-  background:transparent;
+  background:#000000;
 }
 
 #webchat{
@@ -129,30 +155,9 @@ header{
   width:100%;
 }
 
+/* footer escondido para ficar igual ao modelo */
 footer{
-  padding:10px 20px;
-  font-size:11px;
-  color:var(--muted);
-  display:flex;
-  justify-content:space-between;
-  border-top:1px solid var(--border);
-  background:rgba(0,0,0,0.2);
-}
-
-/* botão do cabeçalho */
-#btn-limpar{
-  background:var(--green-soft);
-  border:1px solid var(--green);
-  color:white;
-  padding:8px 14px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:600;
-  transition:0.2s;
-}
-
-#btn-limpar:hover{
-  background:rgba(34,197,94,0.3);
+  display:none;
 }
 
 /* bolhas */
@@ -169,7 +174,6 @@ footer{
    ADAPTIVE CARDS
    ========================= */
 
-/* mantém o card bonito/original, sem pintar fundo geral */
 #webchat .ac-adaptiveCard{
   border-radius:16px !important;
 }
@@ -271,12 +275,17 @@ footer{
   }
 
   header{
-    padding:12px;
-    gap:10px;
+    min-height:92px;
+    padding:18px 14px;
+    gap:12px;
   }
 
   .brand{
-    gap:10px;
+    gap:14px;
+  }
+
+  .logoWrap img{
+    height:36px;
   }
 
   .actions{
@@ -284,28 +293,54 @@ footer{
   }
 
   .meta .title{
-    font-size:15px;
+    font-size:18px;
+  }
+
+  .meta .subtitle{
+    font-size:12px;
+  }
+
+  .statusPill{
+    font-size:13px;
+  }
+
+  #btn-limpar{
+    padding:9px 12px;
+    font-size:13px;
+  }
+}
+
+@media (max-width: 520px){
+  header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .actions{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .logoWrap img{
+    height:34px;
+  }
+
+  .meta .title{
+    font-size:17px;
   }
 
   .meta .subtitle{
     font-size:11px;
   }
-
-  #btn-limpar{
-    padding:8px 12px;
-    font-size:13px;
-  }
-
-  footer{
-    padding:8px 12px;
-  }
 }
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
   <div class="shell">
+
     <header>
       <div class="brand">
         <div class="logoWrap" title="Triunfo Logística">
@@ -326,6 +361,7 @@ footer{
           <span id="botStateText">Online</span>
           <span id="statusDot" class="statusDot"></span>
         </div>
+
         <button onclick="restartChat()" id="btn-limpar">Limpar Conversa</button>
       </div>
     </header>
@@ -338,17 +374,21 @@ footer{
       <div>Triunfo Logística • WebChat</div>
       <div>© 2026</div>
     </footer>
+
   </div>
 </div>
 
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+
 <script>
 const directLineSecret = "BhiuQCvJMH9ZOvzOJ9lx0TWpQ1ztXWA2lCYWoNOxfRwLG15x53AgJQQJ99BHACL93NaAArohAAABAZBS4EtK.6Sde7jEcs7g6XibB7vZp8lmLIRhy2WDUmaBkfLHzs84X1g8ZR7R7JQQJ99CBACHYHv6AArohAAABAZBSoSj9";
 
 async function startChat() {
   const tokenResponse = await fetch("https://directline.botframework.com/v3/directline/tokens/generate", {
     method: "POST",
-    headers: { "Authorization": "Bearer " + directLineSecret }
+    headers: {
+      "Authorization": "Bearer " + directLineSecret
+    }
   });
 
   const { token } = await tokenResponse.json();
@@ -394,5 +434,6 @@ function restartChat() {
 
 startChat();
 </script>
+
 </body>
 </html>
